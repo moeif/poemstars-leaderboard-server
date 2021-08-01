@@ -1,5 +1,5 @@
 [package]
-name = "rocket-practice"
+name = "poemstars-leaderboard-server"
 version = "0.1.0"
 edition = "2018"
 
