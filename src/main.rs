@@ -110,9 +110,14 @@ fn handle_ranklist(
     })
 }
 
+#[get("/hi")]
+fn hello() -> String {
+    "hello moeif!".to_string()
+}
+
 fn main() {
     rocket::ignite()
         .attach(PoemStarsRedisDbConn::fairing())
-        .mount("/", routes![handle_rankplay_end, handle_ranklist])
+        .mount("/", routes![handle_rankplay_end, handle_ranklist, hello])
         .launch();
 }
