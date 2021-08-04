@@ -10,8 +10,8 @@ use rocket_contrib::json::Json;
 use std::collections::HashMap;
 
 const RANK_DATA_KEY_NAME: &str = "PoemStarsRank";
-const MATCH_DATA_KEY_NAME: &str = "PoemStarsMatchKill";
 const RANK_DATA_EN_KEY_NAME: &str = "PoemStarsEnRank";
+const MATCH_DATA_KEY_NAME: &str = "PoemStarsMatchKill";
 const MATCH_DATA_EN_KEY_NAME: &str = "PoemStarsEnMatchKill";
 
 #[database("poemstarsredis")]
