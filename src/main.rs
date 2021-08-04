@@ -24,6 +24,12 @@ struct RankPlayEndReqInfo {
 }
 
 #[derive(Deserialize)]
+struct MatchPlayEndReqInfo {
+    id: String,
+    level: u32,
+}
+
+#[derive(Deserialize)]
 struct RankListReqInfo {
     id: String,
     list_type: u32, // 1 rank play, 2 match play
@@ -31,6 +37,11 @@ struct RankListReqInfo {
 
 #[derive(Serialize)]
 struct RankPlayEndResInfo {
+    my_rank: u32,
+}
+
+#[derive(Serialize)]
+struct MatchPlayEndResInfo {
     my_rank: u32,
 }
 
@@ -65,6 +76,32 @@ fn handle_rankplay_end(
     }
 
     Json(RankPlayEndResInfo { my_rank })
+}
+
+#[post("/matchplayend/<lang>", format = "application/json", data = "<info>")]
+fn handle_matchplay_end(
+    lang: String,
+    conn: PoemStarsRedisDbConn,
+    info: Json<MatchPlayEndReqInfo>,
+) -> Json<MatchPlayEndResInfo> {
+    let key: &str = if lang == "zh" {
+        MATCH_DATA_KEY_NAME
+    } else {
+        MATCH_DATA_EN_KEY_NAME
+    };
+
+    let id: &str = &info.id;
+    let level: u32 = info.level;
+
+    let mut my_rank: u32 = 0;
+
+    if let Ok(_result) = conn.zadd::<&str, u32, &str, usize>(key, id, level) {
+        if let Ok(_result) = conn.zrevrank::<&str, &str, u32>(key, id) {
+            my_rank = _result + 1;
+        }
+    }
+
+    Json(MatchPlayEndResInfo { my_rank })
 }
 
 #[post("/ranklist/<lang>", data = "<info>")]
@@ -118,6 +155,14 @@ fn hello() -> String {
 fn main() {
     rocket::ignite()
         .attach(PoemStarsRedisDbConn::fairing())
-        .mount("/", routes![handle_rankplay_end, handle_ranklist, hello])
+        .mount(
+            "/",
+            routes![
+                handle_rankplay_end,
+                handle_ranklist,
+                handle_matchplay_end,
+                hello
+            ],
+        )
         .launch();
 }
