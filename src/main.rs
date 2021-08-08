@@ -52,7 +52,7 @@ struct RankListResInfo {
     list_data: HashMap<String, u32>,
 }
 
-#[post("/rankplayend/<lang>", format = "application/json", data = "<info>")]
+#[put("/rankplayend/<lang>", format = "application/json", data = "<info>")]
 fn handle_rankplay_end(
     lang: String,
     conn: PoemStarsRedisDbConn,
@@ -78,7 +78,7 @@ fn handle_rankplay_end(
     Json(RankPlayEndResInfo { my_rank })
 }
 
-#[post("/matchplayend/<lang>", format = "application/json", data = "<info>")]
+#[put("/matchplayend/<lang>", format = "application/json", data = "<info>")]
 fn handle_matchplay_end(
     lang: String,
     conn: PoemStarsRedisDbConn,
@@ -104,7 +104,7 @@ fn handle_matchplay_end(
     Json(MatchPlayEndResInfo { my_rank })
 }
 
-#[post("/ranklist/<lang>", data = "<info>")]
+#[put("/ranklist/<lang>", data = "<info>")]
 fn handle_ranklist(
     lang: String,
     conn: PoemStarsRedisDbConn,
