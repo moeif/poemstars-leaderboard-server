@@ -71,7 +71,7 @@ fn handle_rankplay_end(
 
     if let Ok(_result) = conn.zadd::<&str, u32, &str, usize>(key, id, max_score) {
         if let Ok(_result) = conn.zrevrank::<&str, &str, u32>(key, id) {
-            my_rank = _result + 1;
+            my_rank = _result;
         }
     }
 
@@ -97,7 +97,7 @@ fn handle_matchplay_end(
 
     if let Ok(_result) = conn.zadd::<&str, u32, &str, usize>(key, id, level) {
         if let Ok(_result) = conn.zrevrank::<&str, &str, u32>(key, id) {
-            my_rank = _result + 1;
+            my_rank = _result;
         }
     }
 
@@ -127,7 +127,7 @@ fn handle_ranklist(
     let mut my_rank: u32 = 0;
     let mut score_value: u32 = 0;
     if let Ok(_result) = conn.zrevrank::<&str, &str, u32>(key, &info.id) {
-        my_rank = _result + 1;
+        my_rank = _result;
     }
 
     if let Ok(_result) = conn.zscore::<&str, &str, u32>(key, &info.id) {
